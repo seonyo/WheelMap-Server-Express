@@ -42,6 +42,10 @@ class Charger extends Sequelize.Model {
             collate: 'utf8_general_ci'
         });
     }
+    static associate(db){
+        db.Charger.hasMany(db.Review, { foreignKey: 'charger_name', sourceKey: 'facility', onDelete: 'cascade', onUpdate: 'cascade' })
+        db.Charger.hasMany(db.Favorite, { foreignKey: 'charger_name', sourceKey: 'facility', onDelete: 'cascade', onUpdate: 'cascade' })
+    }
 };
 
 module.exports = Charger;

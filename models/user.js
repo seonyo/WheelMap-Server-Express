@@ -32,6 +32,11 @@ class User extends Sequelize.Model {
             collate: 'utf8_general_ci'
         });
     }
+
+    static associate(db) {
+        db.User.hasMany(db.Review, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.User.hasMany(db.Favorite, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+    }
 };
 
 module.exports = User;

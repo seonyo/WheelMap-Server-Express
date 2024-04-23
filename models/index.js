@@ -24,4 +24,9 @@ Review.init(sequelize);
 Review_Img.init(sequelize);
 Charger.init(sequelize);
 
+User.associate(db);
+Review.associate(db);
+Charger.associate(db);
+Favorite.associate(db);
+
 module.exports = db;

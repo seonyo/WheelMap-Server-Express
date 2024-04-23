@@ -8,12 +8,6 @@ class Review_Img extends Sequelize.Model {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            charger_name: {
-                type: DataTypes.STRING(100),
-            },
-            review_id: {
-                type: DataTypes.INTEGER,
-            },
             img: {
                 type: DataTypes.STRING(100),
             },
@@ -27,6 +21,10 @@ class Review_Img extends Sequelize.Model {
             charset: 'utf8',
             collate: 'utf8_general_ci'
         });
+    }
+    static associate(db){
+        db.Review_Img.belongsTo(db.Charger, { foreignKey: 'charger_name', targetKey: 'facility', onDelete: 'cascade', onUpdate: 'cascade'})
+        db.Review_Img.belongsTo(db.Review, { foreignKey: 'review_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade'})
     }
 };
 
