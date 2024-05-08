@@ -31,14 +31,14 @@ sequelize.sync({ force: false })
 
 // routes
 const userRouter = require('./routes/user');
-const answerRouter = require('./routes/chargers');
-const questionRouter = require('./routes/favorites');
+const chargersRouter = require('./routes/chargers');
+
 
 
 // router - 진입할 엔드포인트 + 진입할 라우터
 app.use('/users', userRouter)
-app.use('/questions', questionRouter)
-app.use('/answers', answerRouter)
+app.use('/chargers', chargersRouter)
+
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기 중');
