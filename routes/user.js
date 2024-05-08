@@ -6,9 +6,9 @@ const crypto = require('crypto');
 
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
-//회원가입 api
+
+
 //회원가입 api
 router.post('/', async (req, res) => {
     try {
@@ -57,30 +57,29 @@ router.post('/login', async (req, res) => {
 });
 
 
-// 개인정보 수정 api
-router.put('/update', async (req, res) => {
-    try {
-        const { userId, newPassword, nickname, profile } = req.body;
 
-        // 사용자 확인
+// 회원정보 수정 api
+router.put('/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { newNickname, newProfile } = req.body;
+
+        // Find the user by userId
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
         }
 
-        // 새 비밀번호 해싱
-        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        // Update user information
+        user.nickname = newNickname;
+        user.profile = newProfile;
+        await user.save();
 
-        // 정보 업데이트
-        await User.update({ password: hashedPassword, nickname, profile }, { where: { id: userId } });
-
-        res.json({ message: "개인정보가 업데이트 되었습니다." });
+        res.json({ message: "회원정보가 성공적으로 업데이트되었습니다.", user });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
-
-
 
 
 module.exports = router;
