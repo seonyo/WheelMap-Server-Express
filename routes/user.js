@@ -1,8 +1,14 @@
 const express = require('express');
-const router = express.Router();
-const { User } = require('../models');
-const bcrypt = require('bcrypt'); // bcrypt 모듈 임포트
+const { User } = require('../models');// index는 파일 이름 생략 가능 
+const { Op } = require("sequelize");
+const session = require('express-session');
+const crypto = require('crypto');
 
+const router = express.Router();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+//회원가입 api
 //회원가입 api
 router.post('/', async (req, res) => {
     try {
@@ -15,7 +21,7 @@ router.post('/', async (req, res) => {
         }
 
         // 비밀번호 해싱
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10)
 
         // 새 사용자 생성
         const newUser = await User.create({ password: hashedPassword, nickname, profile, email });
@@ -24,6 +30,7 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+
 
 //로그인 api
 router.post('/login', async (req, res) => {
@@ -48,5 +55,32 @@ router.post('/login', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+
+
+// 개인정보 수정 api
+router.put('/update', async (req, res) => {
+    try {
+        const { userId, newPassword, nickname, profile } = req.body;
+
+        // 사용자 확인
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+        }
+
+        // 새 비밀번호 해싱
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // 정보 업데이트
+        await User.update({ password: hashedPassword, nickname, profile }, { where: { id: userId } });
+
+        res.json({ message: "개인정보가 업데이트 되었습니다." });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+
+
 
 module.exports = router;
