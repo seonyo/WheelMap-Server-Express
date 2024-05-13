@@ -32,12 +32,13 @@ sequelize.sync({ force: false })
 // routes
 const userRouter = require('./routes/user');
 const chargersRouter = require('./routes/chargers');
-
+const reviewRouter = require('./routes/reviews');
 
 
 // router - 진입할 엔드포인트 + 진입할 라우터
 app.use('/users', userRouter)
 app.use('/chargers', chargersRouter)
+app.use('/reviews', reviewRouter)
 
 
 app.listen(app.get('port'), () => {
