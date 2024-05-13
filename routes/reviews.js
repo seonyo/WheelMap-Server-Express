@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 });
 
 //충전소 이름으로 리뷰 찾기
-router.get('/:charger_name',  async(req, res) => {
+router.get('/charger/:charger_name',  async(req, res) => {
     try{
         const charger_name = req.params.charger_name;
 
